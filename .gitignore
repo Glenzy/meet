@@ -25,5 +25,6 @@ yarn-error.log*
 
 # misc
 /json
-
+/test
 credentials.json
+config.json
