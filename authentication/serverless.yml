@@ -5,6 +5,8 @@ service: authentication-server
 provider:
   name: aws
   runtime: nodejs12.x
+  httpApi:
+    cors: true
   environment:
     CLIENT_ID: ${file(config.json):CLIENT_ID}
     CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
