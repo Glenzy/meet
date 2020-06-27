@@ -2,7 +2,7 @@ import { mockEvents } from "./mock-events";
 import axios from "axios";
 
 async function getSuggestions(query) {
-  if (window.location.href.startsWith("http://localhost")) {
+  /*  if (window.location.href.startsWith("http://localhost")) {
     return {
       events: [
         {
@@ -77,7 +77,7 @@ async function getSuggestions(query) {
         },
       ],
     };
-  }
+  } */
 
   /**
    *   GET - https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url
@@ -87,21 +87,15 @@ async function getSuggestions(query) {
 
   const token = await getAccessToken();
   if (token) {
-    const url =
-      "https://api.meetup.com/find/locations?&sign=true&photo-host=public&query=" +
-      query +
-      "&access_token=" +
-      token;
-    const result = await axios.get(url);
-    return result.data;
+    getEvents(32);
   }
   return [];
 }
 
 async function getEvents(max_results = 1) {
-  if (window.location.href.startsWith("http://localhost")) {
+  /*   if (window.location.href.startsWith("http://localhost")) {
     return mockEvents;
-  }
+  } */
   if (!navigator.onLine) {
     const events = localStorage.getItem("lastEvents");
     return JSON.parse(events);
@@ -125,16 +119,21 @@ const getAccessToken = async () => {
   if (!accessToken) {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
+    console.log();
 
     if (!code) {
-      const { authUrl } = await fetch(
+      await fetch(
         "https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url"
-      ).then((res) => res);
-      window.location.href = `${authUrl}`;
-
+      )
+        .then((res) => {
+          return res.json();
+        })
+        .then(({ authUrl }) => {
+          return authUrl ? (window.location.href = `${authUrl}`) : "";
+        });
       return null;
     }
-    return getToken("get", code);
+    return getToken(code);
   }
 
   const lastSavedTime = localStorage.getItem("last_saved_time");
@@ -142,15 +141,18 @@ const getAccessToken = async () => {
   if (accessToken && Date.now() - lastSavedTime < 3600000) {
     return accessToken;
   }
-
-  const refreshToken = localStorage.getItem("refresh_token");
-  return getToken("renew", refreshToken);
 };
 
 const getToken = async (code) => {
   const { access_token } = await fetch(
     `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/token/${code}`
-  );
+  )
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      return res;
+    });
   localStorage.setItem("access_token", access_token);
   localStorage.setItem("last_saved_time", Date.now());
 
