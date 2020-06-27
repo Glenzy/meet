@@ -28,3 +28,4 @@ yarn-error.log*
 /test/node_modules
 credentials.json
 config.json
+test.json
