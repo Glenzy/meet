@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import "./App.css";
 import EventList from "./EventList";
 import CitySearch from "./CitySearch";
@@ -18,6 +18,8 @@ import {
 
 /* const App = () => {
   const [events, setEvents] = useState(undefined);
+  const token = getAccessToken();
+
   useEffect(() => {
     getEvents().then((response) => this.setState({ events: response.events }));
     window.addEventListener("online", this.offLineAlert());
@@ -25,11 +27,15 @@ import {
       window.removeEventListener("online", this.offLineAlert());
     };
   }, []);
-}; */
 
+  useEffect(() => {
+    getEvents().then((response) => this.setState({ events: response.events }));
+  }, [token]);
+};
+ */
 class App extends Component {
   componentDidMount() {
-    getEvents().then((response) => this.setState({ events: response.events }));
+    getEvents().then((response) => this.setState({ events: response }));
     window.addEventListener("online", this.offLineAlert());
   }
 
@@ -100,6 +106,7 @@ class App extends Component {
   };
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
         <CitySearch
@@ -107,12 +114,7 @@ class App extends Component {
           defaultCity={this.state.defaultCity}
         />
         <OfflineAlert text={this.state.offlineText} />
-        <NumberOfEvents
-          updateEvents={this.updateEvents}
-          numberOfEvents={this.state.events.length}
-          lat={this.state.lat}
-          lon={this.state.lon}
-        />
+        <NumberOfEvents updateEvents={this.updateEvents} numberOfEvents={2} />
         {/* <ResponsiveContainer height={400}>
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />

@@ -127,7 +127,7 @@ module.exports.getCalendarEvents = async (event) => {
     client_secret,
     redirect_uris[0]
   );
-  console.log(event);
+
   /**
    * We decode the token passed as a query and force it to the string value
    */
