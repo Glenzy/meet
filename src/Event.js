@@ -20,7 +20,6 @@ const Event = ({ event }) => {
     { name: "open slots", value: event.rsvp_limit - event.yes_rsvp_count },
   ]; */
   //const colors = ["#8884d8", "#37c0ba"];
-  console.log("eventStart", eventStart);
   return (
     <div className="event">
       <div className="event__Overview">

@@ -44,6 +44,7 @@ class App extends Component {
     page: null,
     defaultCity: "",
     offlineText: "",
+    numberOfEvents: 5,
   };
 
   offLineAlert = () => {
@@ -82,31 +83,26 @@ class App extends Component {
     return next7Days;
   };
 
-  updateEvents = (location, page) => {
+  updateEvents = (location, numberOfEvents) => {
     if (location) {
-      getEvents(this.state.page).then((response) =>
+      getEvents(numberOfEvents).then((response) =>
         this.setState({
           events: response.events.filter(
             (event) => event.location === location
           ),
         })
       );
-    } /* else if (page) {
-      //unsure of page relevence
-      getEvents(this.state.lat, this.state.lon, page).then((response) =>
-        this.setState({ events: response.events, page: page })
+    } else {
+      getEvents(numberOfEvents).then((response) =>
+        this.setState({
+          events: response.events,
+          numberOfEvents: numberOfEvents,
+        })
       );
-    } */ else {
-      getEvents(
-        this.state.lat,
-        this.state.lon,
-        this.state.page
-      ).then((response) => this.setState({ events: response.events }));
     }
   };
 
   render() {
-    console.log(this.state);
     return (
       <div className="App">
         <CitySearch

@@ -1,7 +1,7 @@
 import { mockEvents } from "./mock-events";
 import axios from "axios";
 
-async function getSuggestions(query) {
+/* async function getSuggestions(query) {
   if (window.location.href.startsWith("http://localhost")) {
     return [
       {
@@ -82,9 +82,9 @@ async function getSuggestions(query) {
     return getEvents(32);
   }
   return [];
-}
+} */
 
-async function getEvents(max_results = 5) {
+const getEvents = async (max_results = 5) => {
   if (window.location.href.startsWith("http://localhost")) {
     return mockEvents;
   }
@@ -105,7 +105,7 @@ async function getEvents(max_results = 5) {
     }
     return events;
   }
-}
+};
 
 const getAccessToken = async () => {
   const accessToken = await localStorage.getItem("access_token");
@@ -113,7 +113,7 @@ const getAccessToken = async () => {
     `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
   ).then((res) => res.json());
 
-  if (!accessToken || error === "invalid_token") {
+  if (error === "invalid_token" || !accessToken) {
     const searchParams = new URLSearchParams(window.location.search);
     const code = await searchParams.get("code");
 
@@ -127,11 +127,7 @@ const getAccessToken = async () => {
     return getToken(code);
   }
 
-  const lastSavedTime = localStorage.getItem("last_saved_time");
-
-  if (accessToken && Date.now() - lastSavedTime < 3600000) {
-    return accessToken;
-  }
+  return accessToken;
 };
 
 const getToken = async (code) => {
@@ -143,9 +139,8 @@ const getToken = async (code) => {
     return res.json();
   });
   access_token && localStorage.setItem("access_token", access_token);
-  access_token && localStorage.setItem("last_saved_time", Date.now());
 
   return access_token;
 };
 
-export { getSuggestions, getEvents, getAccessToken };
+export { getEvents, getAccessToken };
