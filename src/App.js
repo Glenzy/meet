@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./App.css";
 import EventList from "./EventList";
 import CitySearch from "./CitySearch";
+import ChooseCity from "./ChooseCity";
 import NumberOfEvents from "./NumberOfEvents";
 import { getEvents } from "./api";
 import { OfflineAlert } from "./Alert";
@@ -16,26 +17,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-/* const App = () => {
-  const [events, setEvents] = useState(undefined);
-  const token = getAccessToken();
-
-  useEffect(() => {
-    getEvents().then((response) => this.setState({ events: response.events }));
-    window.addEventListener("online", this.offLineAlert());
-    return () => {
-      window.removeEventListener("online", this.offLineAlert());
-    };
-  }, []);
-
-  useEffect(() => {
-    getEvents().then((response) => this.setState({ events: response.events }));
-  }, [token]);
-};
- */
 class App extends Component {
   componentDidMount() {
-    getEvents().then((response) => this.setState({ events: response }));
+    getEvents().then((response) => {
+      const locationArray = response.events.map(({ location }) => location);
+      const locations = [...new Set(locationArray)];
+      this.setState({ events: response.events, locations });
+    });
     window.addEventListener("online", this.offLineAlert());
   }
 
@@ -45,6 +33,7 @@ class App extends Component {
     defaultCity: "",
     offlineText: "",
     numberOfEvents: 5,
+    locations: [],
   };
 
   offLineAlert = () => {
@@ -85,11 +74,12 @@ class App extends Component {
 
   updateEvents = (location, numberOfEvents) => {
     if (location) {
-      getEvents(numberOfEvents).then((response) =>
+      getEvents(this.state.numberOfEvents).then((response) =>
         this.setState({
-          events: response.events.filter(
-            (event) => event.location === location
-          ),
+          events:
+            location === "all"
+              ? response.events
+              : response.events.filter((event) => event.location === location),
         })
       );
     } else {
@@ -103,11 +93,14 @@ class App extends Component {
   };
 
   render() {
+    console.log(this.state);
     return (
       <div className="App">
-        <CitySearch
+        <h1>Meet App</h1>
+        <h4>Choose your nearest city</h4>
+        <ChooseCity
           updateEvents={this.updateEvents}
-          defaultCity={this.state.defaultCity}
+          locations={this.state.locations}
         />
         <OfflineAlert text={this.state.offlineText} />
         <NumberOfEvents updateEvents={this.updateEvents} numberOfEvents={2} />

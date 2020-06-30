@@ -84,26 +84,39 @@ import axios from "axios";
   return [];
 } */
 
+const removeQuery = () => {
+  if (window.history.pushState && window.location.pathname) {
+    var newurl =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname;
+    window.history.pushState("", "", newurl);
+  } else {
+    newurl = window.location.protocol + "//" + window.location.host;
+    window.history.pushState("", "", newurl);
+  }
+};
+
 const getEvents = async (max_results = 5) => {
-  if (window.location.href.startsWith("http://localhost")) {
+  console.log(max_results);
+  /*   if (window.location.href.startsWith("http://localhost")) {
     return mockEvents;
   }
   if (!navigator.onLine) {
     const events = localStorage.getItem("lastEvents");
     return JSON.parse(events);
-  }
+  } */
   const token = await getAccessToken();
 
   if (token) {
-    console.log(token);
+    //removeQuery();
     const url = `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}/${max_results}`;
     const result = await axios.get(url);
-    const { events } = result.data;
-    console.log("events", JSON.stringify(events));
     if (result.data) {
-      localStorage.setItem("lastEvents", JSON.stringify(events));
+      localStorage.setItem("lastEvents", JSON.stringify(result.data));
     }
-    return events;
+    return result.data;
   }
 };
 
@@ -131,7 +144,6 @@ const getAccessToken = async () => {
 };
 
 const getToken = async (code) => {
-  console.log("GET TOKEN", code);
   const encodeCode = encodeURIComponent(code);
   const { access_token } = await fetch(
     `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/token/${encodeCode}`
