@@ -1,70 +1,85 @@
-import React, { Component } from "react";
-//import { getSuggestions } from './api';
+import React, { useState, useEffect, useRef } from "react";
 import { InfoAlert } from "./Alert";
 
-class CitySearch extends Component {
-  state = {
-    query: "",
-    suggestions: [],
-    infoText: "",
-    warningText: "",
-  };
+const CitySearch = ({ updateEvents, locations }) => {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [suggestions, setSuggestions] = useState(locations);
+  const [searchVal, setSearchVal] = useState("");
+  const [infoText, setInfoText] = useState("");
+  const suggestionList = useRef();
 
-  handleInputChanged = (event) => {
+  useEffect(() => {
+    if (searchVal.length > 0 && suggestions.length === 0) {
+      setInfoText(
+        "We can not find the city you are looking for. Please try another city"
+      );
+    } else {
+      setInfoText("");
+    }
+  }, [suggestions, searchVal.length]);
+
+  useEffect(() => {
+    // add when mounted
+    document.addEventListener("mousedown", handleClickOutside);
+    // return function to be called when unmounted
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleInputChanged = (event) => {
     const value = event.target.value;
-    this.setState({ query: value });
-
-    /*     getSuggestions(value).then((suggestions) => {
-      this.setState({ suggestions });
-
-      if (value && suggestions.length === 0) {
-        this.setState({
-          infoText:
-            "We can not find the city you are looking for. Please try another city",
-        });
-      } else {
-        this.setState({
-          infoText: "",
-        });
-      }
-    }); */
-  };
-
-  handleItemClicked = (value, lat, lon) => {
-    this.setState({ query: value, suggestions: [] });
-    this.props.updateEvents(lat, lon);
-  };
-
-  render() {
-    return (
-      <div className="CitySearch">
-        <InfoAlert text={this.state.infoText} />
-        <label>
-          City:
-          <input
-            type="text"
-            className="city"
-            value={this.state.query}
-            onChange={this.handleInputChanged}
-            placeholder={this.props.defaultCity}
-          />
-        </label>
-
-        <ul className="suggestions">
-          {this.state.suggestions.map((item) => (
-            <li
-              key={item.name_string}
-              onClick={() =>
-                this.handleItemClicked(item.name_string, item.lat, item.lon)
-              }
-            >
-              {item.name_string}
-            </li>
-          ))}
-        </ul>
-      </div>
+    setShowSuggestions(true);
+    setSearchVal(value);
+    setSuggestions(
+      locations.filter(
+        (location) => location.toUpperCase().indexOf(value.toUpperCase()) > -1
+      )
     );
-  }
-}
+  };
+
+  const handleClickOutside = (event, suggestion) => {
+    if (suggestionList.current.contains(event.target)) {
+      // inside click
+      console.log("EVENT", suggestion);
+      return updateEvents(suggestion);
+    }
+    return setShowSuggestions(false);
+  };
+
+  return (
+    <div className="CitySearch">
+      <InfoAlert text={infoText} />
+      <h4>City Search</h4>
+      <label>
+        City:
+        <input
+          type="text"
+          className="city"
+          value={searchVal}
+          onChange={(event) => handleInputChanged(event)}
+        />
+      </label>
+      <ul
+        className={
+          showSuggestions ? "suggestions showSuggestions" : "display-none"
+        }
+        ref={suggestionList}
+      >
+        {suggestions.map((suggestion) => (
+          <li
+            key={suggestion}
+            onClick={(event) => handleClickOutside(event, suggestion)}
+          >
+            {suggestion}
+          </li>
+        ))}
+        <li onClick={(event) => handleClickOutside(event, "all")}>
+          <b>See all cities</b>
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 export default CitySearch;

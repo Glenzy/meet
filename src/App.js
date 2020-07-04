@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import "./App.css";
+import "./nprogress.css";
 import EventList from "./EventList";
 import CitySearch from "./CitySearch";
-import ChooseCity from "./ChooseCity";
 import NumberOfEvents from "./NumberOfEvents";
 import { getEvents } from "./api";
 import { OfflineAlert } from "./Alert";
@@ -20,9 +20,7 @@ import {
 class App extends Component {
   componentDidMount() {
     getEvents().then((response) => {
-      const locationArray = response.events.map(({ location }) => location);
-      const locations = [...new Set(locationArray)];
-      this.setState({ events: response.events, locations });
+      this.setState({ events: response.events, locations: response.locations });
     });
     window.addEventListener("online", this.offLineAlert());
   }
@@ -30,9 +28,9 @@ class App extends Component {
   state = {
     events: [],
     page: null,
-    defaultCity: "",
+    currentLocation: "all",
     offlineText: "",
-    numberOfEvents: 5,
+    numberOfEvents: 32,
     locations: [],
   };
 
@@ -73,6 +71,7 @@ class App extends Component {
   };
 
   updateEvents = (location, numberOfEvents) => {
+    const { currentLocation } = this.state;
     if (location) {
       getEvents(this.state.numberOfEvents).then((response) =>
         this.setState({
@@ -80,12 +79,16 @@ class App extends Component {
             location === "all"
               ? response.events
               : response.events.filter((event) => event.location === location),
+          currentLocation: location,
         })
       );
     } else {
       getEvents(numberOfEvents).then((response) =>
         this.setState({
-          events: response.events,
+          events:
+            currentLocation === "all"
+              ? response.events
+              : response.events.filter((event) => event.location === location),
           numberOfEvents: numberOfEvents,
         })
       );
@@ -93,17 +96,17 @@ class App extends Component {
   };
 
   render() {
-    console.log(this.state);
+    const { locations, numberOfEvents, offlineText, events } = this.state;
     return (
       <div className="App">
         <h1>Meet App</h1>
         <h4>Choose your nearest city</h4>
-        <ChooseCity
+        <CitySearch updateEvents={this.updateEvents} locations={locations} />
+        <OfflineAlert text={offlineText} />
+        <NumberOfEvents
           updateEvents={this.updateEvents}
-          locations={this.state.locations}
+          numberOfEvents={numberOfEvents}
         />
-        <OfflineAlert text={this.state.offlineText} />
-        <NumberOfEvents updateEvents={this.updateEvents} numberOfEvents={2} />
         {/* <ResponsiveContainer height={400}>
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />
@@ -118,7 +121,7 @@ class App extends Component {
             <Scatter name="A school" data={this.getData()} fill="#8884d8" />
           </ScatterChart>
         </ResponsiveContainer> */}
-        <EventList events={this.state.events} />
+        <EventList events={events} />
       </div>
     );
   }

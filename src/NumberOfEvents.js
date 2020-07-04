@@ -1,41 +1,36 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { DebounceInput } from "react-debounce-input";
 import { ErrorAlert } from "./Alert";
 
-class NumberOfEvents extends Component {
-  state = {
-    numberOfEvents: 5,
-  };
+const NumberOfEvents = ({ updateEvents }) => {
+  const [numberOfEvents, setNumberOfEvents] = useState(32);
+  const [infoText, setInfoText] = useState("");
 
-  handleInputChanged = (event) => {
+  const handleInputChanged = (event) => {
     const value = event.target.value;
-    this.props.updateEvents(null, value);
-    this.setState({ numberOfEvents: value });
+    updateEvents(null, value);
+    setNumberOfEvents(value);
 
     if (value < 1) {
-      this.setState({
-        infoText: "Select number from 1 to 32",
-      });
+      setInfoText("Select number from 1 to 32");
     } else {
-      this.setState({
-        infoText: "",
-      });
+      setInfoText("");
     }
   };
 
-  render() {
-    return (
-      <div className="numberOfEvents">
-        <label>Number of Events: </label>
-        <input
-          type="text"
-          id="numberOfEvents__input"
-          value={this.state.numberOfEvents}
-          onChange={this.handleInputChanged}
-        />
-        <ErrorAlert text={this.state.infoText} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className="numberOfEvents">
+      <label>Number of Events: </label>
+      <DebounceInput
+        type="text"
+        id="numberOfEvents__input"
+        debounceTimeout={300}
+        value={numberOfEvents}
+        onChange={handleInputChanged}
+      />
+      <ErrorAlert text={infoText} />
+    </div>
+  );
+};
 
 export default NumberOfEvents;

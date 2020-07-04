@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 const Event = ({ event }) => {
-  const { summary, location, start, end, htmlLink, description } = event;
+  const { summary, location, start, htmlLink, description } = event;
   const [showDetails, setShowDetails] = useState(false);
   const eventStart = moment(start.dateTime, "YYYY-MM-DD HH:mm").toDate();
   // can no longer show the people coming count
