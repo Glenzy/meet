@@ -17,6 +17,8 @@ const removeQuery = () => {
 };
 
 const extractLocations = (events) => {
+  console.log(events);
+  if (!events) return [];
   var extractLocatins = events.map((event) => event.location);
   var locations = [...new Set(extractLocatins)];
   return locations;
@@ -29,7 +31,7 @@ const getEvents = async (max_results = 32) => {
     NProgress.done();
     return { events: mockEvents, locations: extractLocations(mockEvents) };
   }
-  if (!navigator.onLine) {
+  if (!window.Navigator.onLine) {
     const events = localStorage.getItem("lastEvents");
     NProgress.done();
     return { events: JSON.parse(events), locations: extractLocations(events) };

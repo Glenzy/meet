@@ -35,7 +35,7 @@ class App extends Component {
   };
 
   offLineAlert = () => {
-    if (navigator.onLine === false) {
+    if (window.Navigator.onLine === false) {
       this.setState({
         offlineText:
           "You appear to be offline, this list is cached. Please connect to the internet for an updated list.",
