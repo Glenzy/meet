@@ -1,104 +1,60 @@
-import React from 'react';
-import { shallow } from 'enzyme';
-import CitySearch from '../CitySearch';
+import React from "react";
+import { shallow } from "enzyme";
+import { extractLocations } from "../api";
+import { mockEvents } from "../mock-events";
+import CitySearch from "../CitySearch";
 
-describe('<CitySearch /> component', () => {
+const locations = extractLocations(mockEvents);
 
-  test('render text input', () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    expect(CitySearchWrapper.find('.city')).toHaveLength(1);
+describe("<CitySearch /> component", () => {
+  beforeAll(() => {
+    return locations.push("See all cities");
+  });
+  test("renders text input", () => {
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
+    expect(CitySearchWrapper.find(".city")).toHaveLength(1);
   });
 
-  test('render list of suggestions', () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    expect(CitySearchWrapper.find('.suggestions')).toHaveLength(1);
-  });
-
-  test('render text input correctly', () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    const query = CitySearchWrapper.state('query');
-    expect(CitySearchWrapper.find('.city').prop('value')).toBe(query);
-  });
-
-  test('change state when text input changes', () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    const eventObject = { target: { value: 'Berlin' } };
-    CitySearchWrapper.find('.city').simulate('change', eventObject);
-    expect(CitySearchWrapper.state('query')).toBe('Berlin');
-  });
-
-  test('render list of suggestions correctly', () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    const suggestions = CitySearchWrapper.state('suggestions');
-    expect(CitySearchWrapper.find('.suggestions li')).toHaveLength(suggestions.length);
-    for (let i = 0; i < suggestions.length; i += 1) {
-      expect(CitySearchWrapper.find('.suggestions li').at(i).text()).toBe(suggestions[i].name_string);
-    }
-  });
-
-  test('click on suggestion should change query state', () => {
-    const CitySearchWrapper = shallow(<CitySearch updateEvents={() => { }} />);
-    CitySearchWrapper.setState({
-      suggestions: [
-        {
-          city: 'Munich',
-          country: 'de',
-          localized_country_name: 'Germany',
-          name_string: 'Munich, Germany',
-          zip: 'meetup3',
-          lat: 48.14,
-          lon: 11.58
-        },
-        {
-          city: 'Munich',
-          country: 'us',
-          localized_country_name: 'USA',
-          state: 'ND',
-          name_string: 'Munich, North Dakota, USA',
-          zip: '58352',
-          lat: 48.66,
-          lon: -98.85
-        }
-      ]
-    });
-    expect(CitySearchWrapper.find('.suggestions li')).toHaveLength(2);
-    CitySearchWrapper.find('.suggestions li').at(0).simulate('click');
-    expect(CitySearchWrapper.state('query')).toBe('Munich, Germany');
-    expect(CitySearchWrapper.find('.suggestions li')).toHaveLength(0);
-  });
-
-});
-
-describe('<CitySearch /> integration', () => {
-
-  test('get a list of cities when user searches for Munich', async () => {
-    const CitySearchWrapper = shallow(<CitySearch />);
-    CitySearchWrapper.find('.city').simulate('change', { target: { value: 'Munich' } });
-    await CitySearchWrapper.update();
-    expect(CitySearchWrapper.state('suggestions')).toEqual([
-      {
-        city: 'Munich',
-        country: 'de',
-        localized_country_name: 'Germany',
-        name_string: 'Munich, Germany',
-        zip: 'meetup3',
-        lat: 48.14,
-        lon: 11.58
+  test("updates the input correctly", () => {
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
+    CitySearchWrapper.find('input[type="text"]').simulate("change", {
+      target: {
+        value: "Berlin",
       },
-      {
-        city: 'Munich',
-        country: 'us',
-        localized_country_name: 'USA',
-        state: 'ND',
-        name_string: 'Munich, North Dakota, USA',
-        zip: '58352',
-        lat: 48.66,
-        lon: -98.85
-      }
-    ]);
+    });
+    expect(CitySearchWrapper.find('input[type="text"]').prop("value")).toEqual(
+      "Berlin"
+    );
   });
-});
 
-describe('<App /> integration', () => {
+  test("renders a list of suggestions correctly", () => {
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
+    CitySearchWrapper.find('input[type="text"]').simulate("change", {
+      target: {
+        value: "Berlin",
+      },
+    });
+    expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(2);
+  });
 
+  test("clicking a suggestion must initiate a search", () => {
+    const mockUpdateEvents = jest.fn();
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={mockUpdateEvents} locations={locations} />
+    );
+    CitySearchWrapper.find('input[type="text"]').simulate("change", {
+      target: {
+        value: "Berlin",
+      },
+    });
+    CitySearchWrapper.find(".suggestions li").at(0).simulate("click");
+    expect(mockUpdateEvents).toHaveBeenCalledWith("Berlin, Germany");
+    expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(0);
+  });
 });

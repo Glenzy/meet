@@ -70,10 +70,10 @@ class App extends Component {
     return next7Days;
   };
 
-  updateEvents = (location, numberOfEvents) => {
-    const { currentLocation } = this.state;
+  updateEvents = (location, eventCount) => {
+    const { currentLocation, numberOfEvents } = this.state;
     if (location) {
-      getEvents(this.state.numberOfEvents).then((response) =>
+      getEvents(numberOfEvents).then((response) =>
         this.setState({
           events:
             location === "all"
@@ -83,13 +83,13 @@ class App extends Component {
         })
       );
     } else {
-      getEvents(numberOfEvents).then((response) =>
+      getEvents(eventCount).then((response) =>
         this.setState({
           events:
             currentLocation === "all"
               ? response.events
               : response.events.filter((event) => event.location === location),
-          numberOfEvents: numberOfEvents,
+          numberOfEvents: eventCount,
         })
       );
     }

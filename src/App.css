@@ -42,7 +42,7 @@ input[type="number"] {
 }
 
 .suggestions {
-  max-width: 300px;
+  width: 250px;
   position: absolute;
   z-index: 2;
   align-self: center;

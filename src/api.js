@@ -92,4 +92,4 @@ const getToken = async (code) => {
   return access_token;
 };
 
-export { getEvents, getAccessToken };
+export { getEvents, getAccessToken, extractLocations };
