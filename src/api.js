@@ -16,9 +16,16 @@ const removeQuery = () => {
   }
 };
 
+const checkToken = async (accessToken) => {
+  const { error } = await fetch(
+    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
+  ).catch((error) => error.toJSON());
+  const result = error === "invalid_token" ? false : true;
+
+  return result;
+};
+
 const extractLocations = (events) => {
-  console.log(events);
-  if (!events) return [];
   var extractLocatins = events.map((event) => event.location);
   var locations = [...new Set(extractLocatins)];
   return locations;
@@ -31,7 +38,7 @@ const getEvents = async (max_results = 32) => {
     NProgress.done();
     return { events: mockEvents, locations: extractLocations(mockEvents) };
   }
-  if (!window.Navigator.onLine) {
+  if (!navigator.onLine) {
     const events = localStorage.getItem("lastEvents");
     NProgress.done();
     return { events: JSON.parse(events), locations: extractLocations(events) };
@@ -55,17 +62,12 @@ const getEvents = async (max_results = 32) => {
 
 const getAccessToken = async () => {
   const accessToken = await localStorage.getItem("access_token");
-  const { error } = await fetch(
-    `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
-  )
-    .then((res) => res.json())
-    .catch((error) => error);
+  const tokenCheck = accessToken && (await checkToken(accessToken));
 
-  if (error === "invalid_token" || !accessToken) {
-    localStorage.removeItem("access_token");
+  if (!accessToken || !tokenCheck) {
+    await localStorage.removeItem("access_token");
     const searchParams = new URLSearchParams(window.location.search);
     const code = await searchParams.get("code");
-
     if (!code) {
       const results = await axios.get(
         "https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-auth-url"
@@ -73,9 +75,8 @@ const getAccessToken = async () => {
       const { authUrl } = results.data;
       return (window.location.href = authUrl);
     }
-    return getToken(code);
+    return code && getToken(code);
   }
-
   return accessToken;
 };
 

@@ -22,7 +22,7 @@ class App extends Component {
     getEvents().then((response) => {
       this.setState({ events: response.events, locations: response.locations });
     });
-    window.addEventListener("online", this.offLineAlert());
+    //window.addEventListener("online", this.offLineAlert());
   }
 
   state = {
@@ -34,8 +34,8 @@ class App extends Component {
     locations: [],
   };
 
-  offLineAlert = () => {
-    if (window.Navigator.onLine === false) {
+  /*   offLineAlert = () => {
+    if (navigator.onLine === false) {
       this.setState({
         offlineText:
           "You appear to be offline, this list is cached. Please connect to the internet for an updated list.",
@@ -46,7 +46,7 @@ class App extends Component {
       });
     }
   };
-
+ */
   countEventsOnADate = (date) => {
     // This should always return 0 untill we ensure the dates are the same format
     const count = this.state.events.filter(
@@ -71,7 +71,7 @@ class App extends Component {
   };
 
   updateEvents = (location, eventCount) => {
-    const { currentLocation, numberOfEvents } = this.state;
+    const { currentLocation, numberOfEvents, events } = this.state;
     if (location) {
       getEvents(numberOfEvents).then((response) =>
         this.setState({
@@ -83,20 +83,22 @@ class App extends Component {
         })
       );
     } else {
-      getEvents(eventCount).then((response) =>
-        this.setState({
-          events:
-            currentLocation === "all"
-              ? response.events
-              : response.events.filter((event) => event.location === location),
+      getEvents().then((response) => {
+        const locationEvents = response.events.filter(
+          (event) => event.currentLocation === currentLocation
+        );
+        const events = locationEvents.slice(0, eventCount);
+        return this.setState({
+          events: events,
           numberOfEvents: eventCount,
-        })
-      );
+        });
+      });
     }
   };
 
   render() {
     const { locations, numberOfEvents, offlineText, events } = this.state;
+    console.log("STATE", events);
     return (
       <div className="App">
         <h1>Meet App</h1>
