@@ -41,34 +41,6 @@ class Event extends Component {
               @{summary} | {location}
             </p>
           )}
-          {/*         {event.rsvp_limit && (
-            <ResponsiveContainer height={150} width={250}>
-              <PieChart>
-                <Pie
-                  data={data}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={32}
-                  label
-                >
-                  {data.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={colors[index]} />
-                  ))}
-                </Pie>
-                <Legend
-                  iconSize={10}
-                  iconType="triangle"
-                  layout="horizontal"
-                  verticalAlign="bottom"
-                  align="center"
-                />
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          )} */}
-          {/*         {!event.rsvp_limit && <p>{event.yes_rsvp_count} People coming</p>} */}
           {showDetails && (
             <button
               className="details-btn"

@@ -10,11 +10,20 @@ describe("<CitySearch /> component", () => {
   beforeAll(() => {
     return locations.push("See all cities");
   });
+
   test("renders text input", () => {
     const CitySearchWrapper = shallow(
       <CitySearch updateEvents={() => {}} locations={locations} />
     );
     expect(CitySearchWrapper.find(".city")).toHaveLength(1);
+  });
+
+  test("renders text input correctly", () => {
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
+    const query = CitySearchWrapper.state("query");
+    expect(CitySearchWrapper.find(".city").prop("value")).toBe(query);
   });
 
   test("updates the input correctly", () => {
@@ -31,7 +40,22 @@ describe("<CitySearch /> component", () => {
     );
   });
 
-  test("renders a list of suggestions correctly", () => {
+  test("render list of suggestions correctly", () => {
+    const CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
+    const suggestions = CitySearchWrapper.state("suggestions");
+    expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(
+      suggestions.length
+    );
+    for (let i = 0; i < suggestions.length; i += 1) {
+      expect(CitySearchWrapper.find(".suggestions li").at(i).text()).toBe(
+        suggestions[i].name_string
+      );
+    }
+  });
+
+  /*   test("renders a list of suggestions correctly", () => {
     const CitySearchWrapper = shallow(
       <CitySearch updateEvents={() => {}} locations={locations} />
     );
@@ -41,7 +65,7 @@ describe("<CitySearch /> component", () => {
       },
     });
     expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(2);
-  });
+  }); */
 
   test("clicking a suggestion must initiate a search", () => {
     const mockUpdateEvents = jest.fn();

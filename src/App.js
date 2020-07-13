@@ -47,46 +47,54 @@ class App extends Component {
     }
   };
  */
+
+  formatDate = (date) => moment(date).format("YYYY-MM-DD HH:mm");
+
   countEventsOnADate = (date) => {
-    // This should always return 0 untill we ensure the dates are the same format
     const count = this.state.events.filter(
-      (event) => event.start.dateTime === date
+      (event) => this.formatDate(event.start.dateTime) === date
     );
     return count.length;
   };
 
   getData = () => {
-    const currentDate = moment().add(7, "d").format("YYYY-MM-DD HH:mm"); //next 7 days
-    //{ date: dateString, number: count } format
-    const next7Days = this.state.events.filter((event) => {
-      const eventDate = moment(
-        event.start.dateTime,
-        "YYYY-MM-DD HH:mm"
-      ).toDate();
+    const currentDate = moment().add(7, "d").format("YYYY-MM-DD HH:mm");
 
+    const next7Days = this.state.events.filter((event) => {
+      const eventDate = moment(event.start.dateTime).format("YYYY-MM-DD HH:mm");
       return eventDate <= currentDate;
     });
-    console.log("next7Days", next7Days);
-    return next7Days;
+
+    const data = next7Days.map((event) => {
+      const date = this.formatDate(event.start.dateTime);
+      return { date, number: this.countEventsOnADate(date) };
+    });
+
+    return data;
   };
 
   updateEvents = (location, eventCount) => {
-    const { currentLocation, numberOfEvents, events } = this.state;
+    const { currentLocation, numberOfEvents } = this.state;
     if (location) {
-      getEvents(numberOfEvents).then((response) =>
-        this.setState({
-          events:
-            location === "all"
-              ? response.events
-              : response.events.filter((event) => event.location === location),
+      getEvents().then((response) => {
+        const locationEvents =
+          location === "all"
+            ? response.events
+            : response.events.filter((event) => event.location === location);
+        const events = locationEvents.slice(0, numberOfEvents);
+        return this.setState({
+          events: events,
           currentLocation: location,
-        })
-      );
+        });
+      });
     } else {
       getEvents().then((response) => {
-        const locationEvents = response.events.filter(
-          (event) => event.currentLocation === currentLocation
-        );
+        const locationEvents =
+          currentLocation === "all"
+            ? response.events
+            : response.events.filter(
+                (event) => event.location === currentLocation
+              );
         const events = locationEvents.slice(0, eventCount);
         return this.setState({
           events: events,
@@ -98,7 +106,6 @@ class App extends Component {
 
   render() {
     const { locations, numberOfEvents, offlineText, events } = this.state;
-    console.log("STATE", events);
     return (
       <div className="App">
         <h1>Meet App</h1>
@@ -109,7 +116,8 @@ class App extends Component {
           updateEvents={this.updateEvents}
           numberOfEvents={numberOfEvents}
         />
-        {/* <ResponsiveContainer height={400}>
+        <h4>Events in the next 7 days</h4>
+        <ResponsiveContainer height={400}>
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />
             <XAxis type="category" dataKey="date" name="date" />
@@ -122,7 +130,7 @@ class App extends Component {
             <Tooltip cursor={{ strokeDasharray: "3 3" }} />
             <Scatter name="A school" data={this.getData()} fill="#8884d8" />
           </ScatterChart>
-        </ResponsiveContainer> */}
+        </ResponsiveContainer>
         <EventList events={events} />
       </div>
     );
