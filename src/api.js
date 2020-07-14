@@ -25,7 +25,14 @@ const checkToken = async (accessToken) => {
 
   return result;
 };
-
+/**
+ *
+ * @param {*} events:
+ * The following function is to be in api.js.
+ * This function takes an events array, then uses map to create a new array with only locations.
+ * Lastly, we remove all duplicates by creating another new array by using the spread operator and spreading a Set.
+ * The Set removes all duplicates from the array
+ */
 const extractLocations = (events) => {
   var extractLocatins = events.map((event) => event.location);
   var locations = [...new Set(extractLocatins)];
@@ -48,7 +55,7 @@ const getEvents = async (max_results = 32) => {
   const token = await getAccessToken();
 
   if (token) {
-    //removeQuery();
+    removeQuery();
     const url = `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}/${max_results}`;
     const result = await axios.get(url);
     if (result.data) {

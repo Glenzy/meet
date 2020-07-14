@@ -7,29 +7,24 @@ import CitySearch from "../CitySearch";
 const locations = extractLocations(mockEvents);
 
 describe("<CitySearch /> component", () => {
+  let CitySearchWrapper;
   beforeAll(() => {
-    return locations.push("See all cities");
+    locations.push("See all cities");
+    CitySearchWrapper = shallow(
+      <CitySearch updateEvents={() => {}} locations={locations} />
+    );
   });
 
   test("renders text input", () => {
-    const CitySearchWrapper = shallow(
-      <CitySearch updateEvents={() => {}} locations={locations} />
-    );
     expect(CitySearchWrapper.find(".city")).toHaveLength(1);
   });
 
   test("renders text input correctly", () => {
-    const CitySearchWrapper = shallow(
-      <CitySearch updateEvents={() => {}} locations={locations} />
-    );
     const query = CitySearchWrapper.state("query");
     expect(CitySearchWrapper.find(".city").prop("value")).toBe(query);
   });
 
   test("updates the input correctly", () => {
-    const CitySearchWrapper = shallow(
-      <CitySearch updateEvents={() => {}} locations={locations} />
-    );
     CitySearchWrapper.find('input[type="text"]').simulate("change", {
       target: {
         value: "Berlin",
