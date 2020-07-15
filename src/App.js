@@ -3,6 +3,7 @@ import "./App.css";
 import "./nprogress.css";
 import EventList from "./EventList";
 import CitySearch from "./CitySearch";
+import CitySearchB from "./CitySearch";
 import NumberOfEvents from "./NumberOfEvents";
 import { getEvents } from "./api";
 import { OfflineAlert } from "./Alert";
@@ -111,6 +112,7 @@ class App extends Component {
         <h1>Meet App</h1>
         <h4>Choose your nearest city</h4>
         <CitySearch updateEvents={this.updateEvents} locations={locations} />
+        <CitySearchB updateEvents={this.updateEvents} locations={locations} />
         <OfflineAlert text={offlineText} />
         <NumberOfEvents
           updateEvents={this.updateEvents}
