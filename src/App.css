@@ -16,6 +16,13 @@ p {
   margin: 5px 0;
 }
 
+.display-none {
+  display: none;
+}
+.showSuggestions {
+  display: block;
+}
+
 input[type="text"],
 input[type="number"] {
   padding: 8px 6px 8px 10px;
@@ -110,4 +117,12 @@ input[type="number"] {
   width: 80px;
   margin: 20px 0 50px;
   text-align: center;
+}
+
+.button-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 20px;
+  padding: 20px;
+  font-family: sans-serif;
 }

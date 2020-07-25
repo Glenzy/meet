@@ -1,7 +1,8 @@
 import React from "react";
-import { shallow } from "enzyme";
+import { shallow, mount } from "enzyme";
 import { extractLocations } from "../api";
 import { mockEvents } from "../mock-events";
+import App from "../App";
 import CitySearch from "../CitySearch";
 
 const locations = extractLocations(mockEvents);
@@ -75,5 +76,24 @@ describe("<CitySearch /> component", () => {
     CitySearchWrapper.find(".suggestions li").at(0).simulate("click");
     expect(mockUpdateEvents).toHaveBeenCalledWith("Berlin, Germany");
     expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(0);
+  });
+});
+
+describe("<CitySearch /> integration", () => {
+  test("get a list of cities when user searches for Berlin", () => {
+    const CitySearchWrapper = shallow(<CitySearch locations={locations} />);
+    CitySearchWrapper.find(".city").simulate("change", {
+      target: { value: "Berlin" },
+    });
+    expect(CitySearchWrapper.state("suggestions")).toEqual(["Berlin, Germany"]);
+  });
+
+  test("get list of events after user selects a city", async () => {
+    const AppWrapper = mount(<App />);
+    AppWrapper.instance().updateEvents = jest.fn();
+    AppWrapper.instance().forceUpdate();
+    const CitySearchWrapper = AppWrapper.find(CitySearch);
+    CitySearchWrapper.instance().handleItemClicked("value");
+    expect(AppWrapper.instance().updateEvents).toHaveBeenCalledTimes(1);
   });
 });

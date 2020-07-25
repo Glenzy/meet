@@ -55,9 +55,9 @@ describe("<App /> integration", () => {
 
   test("change state after get list of events", async () => {
     const AppWrapper = shallow(<App />);
-    AppWrapper.instance().updateEvents("Berlin, Germany");
+    AppWrapper.instance().updateEvents("");
     await AppWrapper.update();
-    expect(AppWrapper.state("events")).toStrictEqual([mockEvents[0]]);
+    expect(await AppWrapper.state("events")).toStrictEqual(mockEvents);
     AppWrapper.unmount();
   });
 
