@@ -38,7 +38,7 @@ class CitySearch extends Component {
       <div className="CitySearch">
         <InfoAlert text={this.state.infoText} />
         <label>
-          <h4>City Search</h4>
+          {/* <h4>City Search</h4> */}
           <input
             type="text"
             className="city"

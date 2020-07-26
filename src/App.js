@@ -110,15 +110,15 @@ updateEvents = (location, eventCount) => {
     const { locations, numberOfEvents, offlineText, events } = this.state;
     return (
       <div className="App">
-        <h1>Meet App</h1>
-        <h4>Choose your nearest city</h4>
+{/*         <h1>Meet App</h1>
+        <h4>Choose your nearest city</h4> */}
         <CitySearch updateEvents={this.updateEvents} locations={locations} />
         <OfflineAlert text={offlineText} />
         <NumberOfEvents
           updateEvents={this.updateEvents}
           numberOfEvents={numberOfEvents}
         />
-        <h4>Events in the next 7 days</h4>
+{/*         <h4>Events in the next 7 days</h4>
         <ResponsiveContainer height={400}>
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />
@@ -132,7 +132,7 @@ updateEvents = (location, eventCount) => {
             <Tooltip cursor={{ strokeDasharray: "3 3" }} />
             <Scatter name="A school" data={this.getData()} fill="#8884d8" />
           </ScatterChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer> */}
         <EventList events={events} />
       </div>
     );
