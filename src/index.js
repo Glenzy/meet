@@ -12,5 +12,5 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-serviceWorker.unregister();
+serviceWorker.register();
 atatus.config('fb85af9c856b456b89253eb0c34d9a66').install();
