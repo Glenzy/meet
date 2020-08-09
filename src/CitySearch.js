@@ -1,56 +1,59 @@
-import React, { Component } from "react";
-import { InfoAlert } from "./Alert";
+import React, { Component } from 'react';
+import { InfoAlert } from './Alert';
 
 class CitySearch extends Component {
   state = {
     locations: this.props.locations,
-    query: "",
+    query: '',
     suggestions: [],
-    infoText: "",
-    warningText: "",
-    showSuggestions: false,
+    showSuggestions:false
   };
+
   handleInputChanged = (event) => {
     const value = event.target.value;
-    this.setState({ showSuggestions: true });
+    this.setState({showSuggestions:true});
     const suggestions = this.props.locations.filter((location) => {
       return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
     });
-
-    return this.setState({
-      query: value,
-      suggestions,
-    });
+    console.log(this.state.query)
+    if (suggestions.length === 0) {
+      return this.setState({
+        query: value,
+        infoText: 'We can not find the city you are looking for. Please try another city',
+      });
+    } else {
+      return this.setState({
+        query: value,
+        suggestions,
+        infoText:''
+      });
+    }
   };
 
   handleItemClicked = (suggestion) => {
     this.setState({
       query: suggestion,
       suggestions: [],
-      showSuggestions: false,
+      showSuggestions:false,
+      infoText:''
     });
     this.props.updateEvents(suggestion);
   };
 
   render() {
-    const { showSuggestions } = this.state;
+    console.log(this.state.query)
     return (
-      <div className="CitySearch">
-        <InfoAlert text={this.state.infoText} />
-        <label>
-          {/* <h4>City Search</h4> */}
-          <input
-            type="text"
-            className="city"
-            value={this.state.query}
-            onChange={this.handleInputChanged}
-            placeholder="Search for a city"
-          />
-        </label>
-
+      <div className='CitySearch'>
+      <InfoAlert text={this.state.infoText} />
+        <input
+          type='text'
+          className='city'
+          value={this.state.query}
+          onChange={this.handleInputChanged}
+        />
         <ul
           className={
-            showSuggestions ? "suggestions showSuggestions" : "display-none"
+            this.state.showSuggestions ? 'suggestions showSuggestions' : 'display-none'
           }
         >
           {this.state.suggestions.map((suggestion) => (
@@ -61,7 +64,7 @@ class CitySearch extends Component {
               {suggestion}
             </li>
           ))}
-          <li onClick={() => this.handleItemClicked("all")}>
+          <li onClick={() => this.handleItemClicked('all')}>
             <b>See all cities</b>
           </li>
         </ul>

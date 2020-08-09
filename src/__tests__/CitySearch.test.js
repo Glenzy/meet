@@ -44,14 +44,9 @@ describe("<CitySearch /> component", () => {
     expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(
       suggestions.length
     );
-    for (let i = 0; i < suggestions.length; i += 1) {
-      expect(CitySearchWrapper.find(".suggestions li").at(i).text()).toBe(
-        suggestions[i].name_string
-      );
-    }
   });
 
-  /*   test("renders a list of suggestions correctly", () => {
+  test("renders a list of suggestions correctly", () => {
     const CitySearchWrapper = shallow(
       <CitySearch updateEvents={() => {}} locations={locations} />
     );
@@ -61,7 +56,7 @@ describe("<CitySearch /> component", () => {
       },
     });
     expect(CitySearchWrapper.find(".suggestions li")).toHaveLength(2);
-  }); */
+  }); 
 
   test("clicking a suggestion must initiate a search", () => {
     const mockUpdateEvents = jest.fn();

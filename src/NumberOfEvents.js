@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { DebounceInput } from "react-debounce-input";
 import { ErrorAlert } from "./Alert";
 class NumberOfEvents extends Component {
   state = {
@@ -27,10 +26,9 @@ class NumberOfEvents extends Component {
     return (
       <div className="numberOfEvents">
         <label>Number of Events: </label>
-        <DebounceInput
+        <input
           type="text"
           id="numberOfEvents__input"
-          debounceTimeout={300}
           value={numberOfEvents}
           onChange={this.handleInputChanged}
         />

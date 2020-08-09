@@ -1,13 +1,13 @@
-import React, { useState, Component } from "react";
+import React, {  Component } from "react";
 import moment from "moment";
-import {
+/* import {
   PieChart,
   Pie,
   Tooltip,
   Cell,
   Legend,
   ResponsiveContainer,
-} from "recharts";
+} from "recharts"; */
 
 class Event extends Component {
   state = {
