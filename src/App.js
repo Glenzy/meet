@@ -16,6 +16,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  Brush
 } from "recharts";
 
 class App extends Component {
@@ -23,7 +24,6 @@ class App extends Component {
     getEvents().then((response) => {
       this.setState({ events: response.events, locations: response.locations });
     });
-    //window.addEventListener("online", this.offLineAlert());
   }
 
   state = {
@@ -35,42 +35,15 @@ class App extends Component {
     locations: [],
   };
 
-  /*   offLineAlert = () => {
-    if (navigator.onLine === false) {
-      this.setState({
-        offlineText:
-          "You appear to be offline, this list is cached. Please connect to the internet for an updated list.",
-      });
-    } else {
-      this.setState({
-        offlineText: "",
-      });
-    }
-  };
- */
 
-  formatDate = (date) => moment(date).format("YYYY-MM-DD HH:mm");
-
-  countEventsOnADate = (date) => {
-    const count = this.state.events.filter(
-      (event) => this.formatDate(event.start.dateTime) === date
-    );
-    return count.length;
-  };
 
   getData = () => {
-    const currentDate = moment().add(7, "d").format("YYYY-MM-DD HH:mm");
-
-    const next7Days = this.state.events.filter((event) => {
-      const eventDate = moment(event.start.dateTime).format("YYYY-MM-DD HH:mm");
-      return eventDate <= currentDate;
-    });
-
-    const data = next7Days.map((event) => {
-      const date = this.formatDate(event.start.dateTime);
-      return { date, number: this.countEventsOnADate(date) };
-    });
-
+    const {locations, events} = this.state;
+    const data = locations.map((location)=>{
+      const number = events.filter((event) => event.location === location).length
+      const city = location.split(' ').shift()
+      return {city, number};
+    })
     return data;
   };
 
@@ -107,22 +80,22 @@ updateEvents = (location, eventCount) => {
   }; 
 
   render() {
-    const { locations, numberOfEvents, offlineText, events } = this.state;
+    const { locations, numberOfEvents, events } = this.state;
     return (
       <div className="App">
         <h1>Meet App</h1>
         <h4>Choose your nearest city</h4>
         <CitySearch updateEvents={this.updateEvents} locations={locations} />
-        <OfflineAlert text={offlineText} />
         <NumberOfEvents
           updateEvents={this.updateEvents}
           numberOfEvents={numberOfEvents}
-        />
-        <h4>Events in the next 7 days</h4>
-{/*         <ResponsiveContainer height={400}>
+        />       
+         <h4>Events in each city</h4>
+         
+        <ResponsiveContainer height={400} >
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />
-            <XAxis type="category" dataKey="date" name="date" />
+            <XAxis type="category" dataKey="city" name="city" />
             <YAxis
               allowDecimals={false}
               type="number"
@@ -130,9 +103,9 @@ updateEvents = (location, eventCount) => {
               name="number of events"
             />
             <Tooltip cursor={{ strokeDasharray: "3 3" }} />
-            <Scatter name="A school" data={this.getData()} fill="#8884d8" />
+            <Scatter data={this.getData()} fill="#8884d8" />
           </ScatterChart>
-        </ResponsiveContainer> */}
+        </ResponsiveContainer> 
         <EventList events={events} />
       </div>
     );

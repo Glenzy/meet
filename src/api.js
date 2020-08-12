@@ -44,7 +44,9 @@ const extractLocations = (events) => {
 
 const getEvents = async (max_results = 32) => {
   NProgress.start();
-
+  const events = await localStorage.getItem("lastEvents");
+  NProgress.done();
+  return { events: JSON.parse(events).events, locations: extractLocations(JSON.parse(events).events) };
   if (window.location.href.startsWith("http://localhost")) {
     NProgress.done();
     return { events: mockEvents, locations: extractLocations(mockEvents) };
