@@ -50,6 +50,7 @@ input[type="number"] {
 
 .suggestions {
   width: 250px;
+  position: absolute;
   z-index: 2;
   align-self: center;
   margin: 0;
@@ -124,4 +125,37 @@ input[type="number"] {
   grid-gap: 20px;
   padding: 20px;
   font-family: sans-serif;
+}
+
+
+.Alert {
+  position: fixed;
+  top: 20px;
+}
+
+.data-vis-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.data-vis-wrapper .recharts-responsive-container {
+  min-width: 100%;
+  display: flex;
+
+}
+.recharts-surface {
+  overflow: visible;
+}
+
+@media only screen and (min-width: 992px) {
+  .data-vis-wrapper {
+    flex-direction: row;
+  }
+  .data-vis-wrapper .recharts-responsive-container {
+    flex-basis: 50%;
+    max-width: 50%;
+    min-width: auto;
+    margin : 0 auto;
+
+  }
 }

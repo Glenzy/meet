@@ -6,8 +6,6 @@ import CitySearch from "./CitySearch";
 
 import NumberOfEvents from "./NumberOfEvents";
 import { getEvents } from "./api";
-import { OfflineAlert } from "./Alert";
-import moment from "moment";
 import {
   ScatterChart,
   Scatter,
@@ -16,8 +14,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Brush
 } from "recharts";
+import EventGenre from "./EventGenre";
 
 class App extends Component {
   componentDidMount() {
@@ -89,9 +87,9 @@ updateEvents = (location, eventCount) => {
         <NumberOfEvents
           updateEvents={this.updateEvents}
           numberOfEvents={numberOfEvents}
-        />       
-         <h4>Events in each city</h4>
-         
+        />   
+        <div className="data-vis-wrapper">
+        <EventGenre locations={locations} events={events} />
         <ResponsiveContainer height={400} >
           <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
             <CartesianGrid />
@@ -106,6 +104,7 @@ updateEvents = (location, eventCount) => {
             <Scatter data={this.getData()} fill="#8884d8" />
           </ScatterChart>
         </ResponsiveContainer> 
+        </div>    
         <EventList events={events} />
       </div>
     );

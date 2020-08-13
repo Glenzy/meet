@@ -1,26 +1,11 @@
 import React, {  Component } from "react";
 import moment from "moment";
-/* import {
-  PieChart,
-  Pie,
-  Tooltip,
-  Cell,
-  Legend,
-  ResponsiveContainer,
-} from "recharts"; */
 
 class Event extends Component {
   state = {
     showDetails: false,
   };
 
-  // can no longer show the people coming count
-  /*   const event = this.props.event;
-  const data = [
-    { name: "people coming", value: event.yes_rsvp_count },
-    { name: "open slots", value: event.rsvp_limit - event.yes_rsvp_count },
-  ]; */
-  //const colors = ["#8884d8", "#37c0ba"];
   render() {
     const {
       summary,
