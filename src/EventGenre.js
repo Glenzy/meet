@@ -4,19 +4,19 @@ import {
 } from 'recharts';
 
 
-const EventGenre = ({locations, events}) => {
+const EventGenre = ({events}) => {
 
   const [data, setData] = useState([]);
   
   useEffect(() => {
     setData(() => getData());
-  }, [events, locations]);
+  }, [events]);
   
   const getData = () => {
-    const genres = ["React", "JavaScript", "Node", "jQuery", "AngularJS"];
+    const genres = ['React', 'JavaScript', 'Node', 'jQuery', 'AngularJS'];
     const data = genres.map((genre) => {
       const value = events.filter(({ summary }) =>
-        summary.split(" ").includes(genre)
+        summary.split(' ').includes(genre)
       ).length;
       return { name: genre, value };
     });
