@@ -66,7 +66,7 @@ describe("<App /> integration", () => {
     AppWrapper.setState({
       events: mockEvents,
     });
-    expect(AppWrapper.find(".event")).toHaveLength(2);
+    expect(AppWrapper.find(".event")).toHaveLength(mockEvents.length);
     AppWrapper.unmount();
   });
 });

@@ -45,19 +45,14 @@ const extractLocations = (events) => {
 const getEvents = async (max_results = 32) => {
   NProgress.start();
 
-  if (!navigator.onLine) {
-    const events = localStorage.getItem('lastEvents');
-    NProgress.done();
-    return  { events: JSON.parse(events).events, locations: extractLocations(JSON.parse(events).events) };
-  }
-
   if (window.location.href.startsWith("http://localhost")) {
     NProgress.done();
     return { events: mockEvents, locations: extractLocations(mockEvents) };
   }
   if (!navigator.onLine) {
-    const events = localStorage.getItem("lastEvents");
+    const { events } = await localStorage.getItem("lastEvents");
     NProgress.done();
+    
     return { events: JSON.parse(events), locations: extractLocations(events) };
   }
 
@@ -69,7 +64,7 @@ const getEvents = async (max_results = 32) => {
     const result = await axios.get(url);
     if (result.data) {
       var locations = extractLocations(result.data.events);
-      localStorage.setItem("lastEvents", JSON.stringify(result.data));
+      localStorage.setItem("lastEvents", JSON.stringify(result.data.events));
       localStorage.setItem("locations", JSON.stringify(locations));
     }
     NProgress.done();

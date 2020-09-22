@@ -34,6 +34,7 @@ class Event extends Component {
               hide details
             </button>
           )}
+          
           {!showDetails && (
             <button
               className="details-btn"

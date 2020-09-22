@@ -15,7 +15,6 @@ class CitySearch extends Component {
     const suggestions = this.props.locations.filter((location) => {
       return location.toUpperCase().indexOf(value.toUpperCase()) > -1;
     });
-    console.log(this.state.query)
     if (suggestions.length === 0) {
       return this.setState({
         query: value,
@@ -41,7 +40,6 @@ class CitySearch extends Component {
   };
 
   render() {
-    console.log(this.state.query)
     return (
       <div className='CitySearch'>
       <InfoAlert text={this.state.infoText} />

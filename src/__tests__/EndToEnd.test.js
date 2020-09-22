@@ -4,9 +4,11 @@ describe('show/hide an event details', () => {
   let browser;
   let page;
   beforeAll(async () => {
+    jest.setTimeout(30000);
     browser = await puppeteer.launch({
       headless: false,
-      // slowMo: 250
+      slowMo: 250,
+      ignoreDefaultArgs: ['--disable-extensions']
     });
     page = await browser.newPage();
     await page.goto('http://localhost:3000/');
@@ -25,7 +27,6 @@ describe('show/hide an event details', () => {
     const extra = await page.$('.event .event__Details');
 
     expect(extra).toBeNull();
-    jest.setTimeout(6000);
   });
 
   test('User can expand an event to see its details', async () => {
