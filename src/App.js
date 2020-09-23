@@ -3,9 +3,9 @@ import "./App.css";
 import "./nprogress.css";
 import EventList from "./EventList";
 import CitySearch from "./CitySearch";
-
+import Login from "./Login";
 import NumberOfEvents from "./NumberOfEvents";
-import { getEvents } from "./api";
+import { getEvents, checkToken } from "./api";
 import {
   ScatterChart,
   Scatter,
@@ -18,22 +18,6 @@ import {
 import EventGenre from "./EventGenre";
 
 class App extends Component {
-  componentDidMount() {
-    this.mounted = true;
-    getEvents().then((response) => {
-      if (this.mounted) {
-        this.setState({
-          events: response.events,
-          locations: response.locations,
-        });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
   state = {
     events: [],
     page: null,
@@ -41,7 +25,22 @@ class App extends Component {
     offlineText: "",
     numberOfEvents: 32,
     locations: [],
+    tokenCheck: false,
   };
+
+  componentDidMount() {
+    const accessToken = localStorage.getItem("access_token");
+    const tokenCheck = accessToken !== null  ? checkToken(accessToken) : false;
+    this.setState({ tokenCheck });
+    const searchParams = new URLSearchParams(window.location.search);
+    const code = searchParams.get("code");
+    this.mounted = true;
+    if (code && this.mounted === true) this.updateEvents();
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   getData = () => {
     const { locations, events } = this.state;
@@ -66,6 +65,7 @@ class App extends Component {
         return this.setState({
           events: events,
           currentLocation: location,
+          locations: response.locations,
         });
       });
     } else {
@@ -80,14 +80,20 @@ class App extends Component {
         return this.setState({
           events: events,
           numberOfEvents: eventCount,
+          locations: response.locations,
         });
       });
     }
   };
 
   render() {
-    const { locations, numberOfEvents, events } = this.state;
-    return (
+    const { locations, numberOfEvents, events, tokenCheck } = this.state;
+    console.log('Huh?', tokenCheck);
+    return tokenCheck === false ? (
+      <div className="App">
+        <Login />
+      </div>
+    ) : (
       <div className="App">
         <h1>Meet App</h1>
         <h4>Choose your nearest city</h4>
