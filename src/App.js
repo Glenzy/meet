@@ -35,7 +35,9 @@ class App extends Component {
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
     this.mounted = true;
-    if (code && this.mounted === true) this.updateEvents();
+    if (code && this.mounted === true){ 
+      this.setState({tokenCheck:true }, this.updateEvents());
+    }
   }
 
   componentWillUnmount() {
@@ -88,7 +90,6 @@ class App extends Component {
 
   render() {
     const { locations, numberOfEvents, events, tokenCheck } = this.state;
-    console.log('Huh?', tokenCheck);
     return tokenCheck === false ? (
       <div className="App">
         <Login />
