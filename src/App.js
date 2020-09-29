@@ -5,7 +5,7 @@ import EventList from "./EventList";
 import CitySearch from "./CitySearch";
 import Login from "./Login";
 import NumberOfEvents from "./NumberOfEvents";
-import { getEvents, checkToken } from "./api";
+import { getEvents, checkToken, getToken } from "./api";
 import {
   ScatterChart,
   Scatter,
@@ -28,14 +28,16 @@ class App extends Component {
     tokenCheck: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const accessToken = localStorage.getItem("access_token");
-    const tokenCheck = accessToken !== null  ? checkToken(accessToken) : false;
-    this.setState({ tokenCheck });
+    const validToken = accessToken !== null  ? await checkToken(accessToken) : false;
+    this.setState({ tokenCheck: validToken });
+    if(this.state.tokenCheck === true) this.updateEvents()
     const searchParams = new URLSearchParams(window.location.search);
     const code = searchParams.get("code");
     this.mounted = true;
     if (code && this.mounted === true){ 
+      getToken(code)
       this.setState({tokenCheck:true }, this.updateEvents());
     }
   }

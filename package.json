@@ -2,7 +2,7 @@
   "name": "meet",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://glenzy.github.io/meet",
+  "homepage": "http://glenzy.github.io",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
