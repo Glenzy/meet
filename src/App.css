@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:500);
 .App {
   text-align: center;
   padding: 2% 5%;
@@ -127,7 +128,6 @@ input[type="number"] {
   font-family: sans-serif;
 }
 
-
 .Alert {
   position: fixed;
   top: 20px;
@@ -141,7 +141,6 @@ input[type="number"] {
 .data-vis-wrapper .recharts-responsive-container {
   min-width: 100%;
   display: flex;
-
 }
 .recharts-surface {
   overflow: visible;
@@ -157,8 +156,49 @@ input[type="number"] {
   display: inline-block;
   transition: all 0.4s ease 0s;
   min-width: 10rem;
-  margin:1rem;
+  margin: 1rem;
 }
+
+.google-btn {
+  width: 184px;
+  height: 42px;
+  margin: 1rem;
+  background-color: #4285f4;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+}
+.google-btn:hover {
+  box-shadow: 0 0 6px #4285f4;
+}
+.google-btn:active {
+  background: #1669f2;
+}
+.google-icon-wrapper {
+  position: absolute;
+  margin-top: 1px;
+  margin-left: 1px;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background-color: #fff;
+}
+.google-icon {
+  position: absolute;
+  margin-top: 11px;
+  margin-left: -8px;
+  width: 18px;
+  height: 18px;
+}
+.btn-text {
+  float: right;
+  margin: 11px 11px 0 0;
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  font-family: "Roboto";
+}
+
+
 
 @media only screen and (min-width: 992px) {
   .data-vis-wrapper {
@@ -168,7 +208,6 @@ input[type="number"] {
     flex-basis: 50%;
     max-width: 50%;
     min-width: auto;
-    margin : 0 auto;
-
+    margin: 0 auto;
   }
 }

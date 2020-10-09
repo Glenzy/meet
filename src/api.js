@@ -57,7 +57,7 @@ const getEvents = async (max_results = 32) => {
   }
 
   const token = await getAccessToken();
-
+  console.log('getEvents token: ', token)
   if (token) {
     removeQuery();
     const url = `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/get-events/${token}/${max_results}`;
@@ -93,6 +93,7 @@ const getAccessToken = async () => {
 };
 
 const getToken = async (code) => {
+  removeQuery();
   const encodeCode = encodeURIComponent(code);
   const { access_token } = await fetch(
     `https://f1k17pnw2a.execute-api.us-east-1.amazonaws.com/dev/api/token/${encodeCode}`
