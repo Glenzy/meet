@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "eslint-config-react-app": "^5.2.1",
-    "firebase-admin": "^8.10.0",
+    "firebase-admin": "^11.4.1",
     "firebase-functions": "^3.6.1",
     "googleapis": "^39.2.0"
   },
